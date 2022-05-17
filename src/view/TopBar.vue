@@ -12,6 +12,13 @@
                     <mu-icon slot="right" value="home"/>
                 </mu-list-item>            
             </mu-list>
+
+            <mu-list  @itemClick="docked ? '' : toggle()">
+                <mu-list-item title="搜索车票" to="/search">
+                    <mu-icon slot="right" value="search"/>
+                </mu-list-item>          
+            </mu-list>
+
             <mu-list  @itemClick="docked ? '' : toggle()" v-show="show_status.isshow">
                 <mu-list-item title="用户信息" to="/userlist">
                     <mu-icon slot="right" value="users"/>

@@ -63,7 +63,7 @@
             prop="goods.goods_num"
             label="操作">
             <template slot-scope="scope">
-                <el-button size="mini" type='danger' @click="buy_ticket(scope.row.id)">买票</el-button>
+                <el-button size="mini" type='primary' @click="buy_ticket(scope.row.id)">买票</el-button>
                 <el-button size="mini" type='danger' @click="lock_ticket(scope.row.id)">抢票</el-button>
             </template>
         </el-table-column>
@@ -135,7 +135,7 @@ export default {
        },
        },
        submit_ticket(){
-           let api = 'api/order/add_ticket'
+           let api = 'api/order/    '
            const source = this.form.source
            const target = this.form.target
            const num = this.form.num
@@ -155,7 +155,7 @@ export default {
     mounted(){
         this.getData(),
         this.userStatus()
-    }
+    },
 }
 </script>
 

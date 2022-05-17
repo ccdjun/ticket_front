@@ -7,6 +7,7 @@ import Login from '@/view/Login'
 import Register from '@/view/Register'
 import Self from '@/view/Self'
 import SelfOrder from '@/view/SelfOrder'
+import Search from '@/view/Search'
 
 Vue.use(Router)
 
@@ -50,7 +51,11 @@ export default new Router({
       path: '/selforder',
       name: 'SelfOrder',
       component: SelfOrder
-
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: Search
     }
 
   ]
