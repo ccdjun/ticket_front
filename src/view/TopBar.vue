@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name: "TopBar",
     data() {
@@ -73,17 +75,21 @@ export default {
 
         },
         userStatus(){
-            const key = this.$store.state.token.split('||')[1]
-            if(key == 1){
-                this.show_status.isshow = true
-            }
+            const key = this.$store.state.token.split('||')[0]
+            const api = `api/user/show_user_status?user_id=${key}`
+            axios.get(api).then(res => {
+                if(res.data.user_status == 1){
+                    this.show_status.isshow = true
+                }
+            })
+            
+            // if(key == 1){
+            //     this.show_status.isshow = true
+            // }
         }
     },
     mounted(){
         this.userStatus()
     },
-    created(){
-        this.userStatus()
-    }
 }
 </script>

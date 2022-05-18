@@ -35,14 +35,14 @@
             align="center"
             prop="source"
             label="出发点"
-            width="240">
+            >
         </el-table-column>
             <el-table-column
             stripe
             align="center"
             prop="target"
             label="目的地"
-            width="240">
+            >
         </el-table-column>
         <el-table-column
             stripe
@@ -50,18 +50,6 @@
             prop="num"
             label="余票数量">
         </el-table-column>
-        
-        <el-table-column
-            stripe
-            align="center"
-            prop="goods.goods_num"
-            label="操作">
-            <template slot-scope="scope">
-                <el-button size="mini" type='primary' @click="buy_ticket(scope.row.id)">买票</el-button>
-                <el-button size="mini" type='danger' @click="lock_ticket(scope.row.id)">抢票</el-button>
-            </template>
-        </el-table-column>
-        
     
         </el-table-column>
         </el-table>

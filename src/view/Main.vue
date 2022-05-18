@@ -23,7 +23,6 @@
         <el-table
         stripe
         border
-        @row-click="set_redirct_data"
         :data="tableData"
         style="width: 100% ; font-size: 18px"
         >
@@ -54,17 +53,33 @@
             stripe
             align="center"
             prop="num"
-            label="余票数量">
+            label="余票数量"
+            width="200">
+        
         </el-table-column>
         
+        <el-table-column
+            stripe
+            align="center"
+            prop="num"
+            label="修改余票"
+            width="200"
+            v-if="isShow">
+            
+            <template slot-scope="scope">
+                <el-input type="text" v-model="scope.row.num"/>
+            </template>
+        </el-table-column>
+
         <el-table-column
             stripe
             align="center"
             prop="goods.goods_num"
             label="操作">
             <template slot-scope="scope">
-                <el-button size="mini" type='primary' @click="buy_ticket(scope.row.id)">买票</el-button>
-                <el-button size="mini" type='danger' @click="lock_ticket(scope.row.id)">抢票</el-button>
+                <el-button size="mini" type='primary' v-if="scope.row.num>0" @click="buy_ticket(scope.row.id)">买票</el-button>
+                <el-button v-if="scope.row.num==0" size="mini" type='danger' @click="lock_ticket(scope.row.id)">抢票</el-button>
+                <el-button size="mini" type='warning' v-show="isShow" @click="modify(scope.row.id, scope.row.num)">修改余票</el-button>
             </template>
         </el-table-column>
         
@@ -93,8 +108,7 @@ export default {
                 delivery: false,
             },
             formLabelWidth: '120px',
-            esdata:''
-
+            isShow: false
         }
     },
     components: {
@@ -105,6 +119,7 @@ export default {
            let api = 'api/order/show_ticket'
            axios.get(api).then((result)=>{
            this.tableData = result.data.ticket_info
+           console.log(result)
         })
        },
        buy_ticket(ticket){
@@ -125,17 +140,16 @@ export default {
            let api = 'api/order/lock_order'
            const data = `user_id=${user_id}&ticket_id=${ticket}&email=${email}`
            axios.post(api,data).then(res=>{
+                alert('已经提交任务请在订单页面查看')
                 if (res.data.status==200){
-                    alert('已经提交任务请在订单页面查看')
                     this.getData()
                 }else{
                     alert('抢票失败')
                 }
            })
        },
-       },
        submit_ticket(){
-           let api = 'api/order/    '
+           let api = 'api/order/add_ticket'
            const source = this.form.source
            const target = this.form.target
            const num = this.form.num
@@ -146,15 +160,35 @@ export default {
                this.getData()
            })
        },
-       userStatus(){
-            const key = this.$store.state.token.split('||')[1]
-            if(key == 1){
-                this.isShow = true
-            }
-        },
+       cc(){
+            const key = this.$store.state.token.split('||')[0]
+            const api = `api/user/show_user_status?user_id=${key}`
+            axios.get(api).then(res => {
+                if(res.data.user_status == 1){
+                    this.isShow = true
+                    console.log(res)
+                }
+            })
+       },
+       modify(id,num){
+           if(num < 0){
+               alert('请输入正数')
+               return
+           }
+           const api = 'api/order/modify_num'
+           const data = `ticket_id=${id}&num=${num}`
+            axios.post(api, data).then(res =>{
+                if (res.data.status == 200){
+                    this.getData()
+                }else{
+                    alert('修改失败')
+                }
+            })
+       }
+    },
     mounted(){
         this.getData(),
-        this.userStatus()
+        this.cc()
     },
 }
 </script>
@@ -192,6 +226,7 @@ export default {
 .comment {
     text-align: center
 }
+
 
 
 

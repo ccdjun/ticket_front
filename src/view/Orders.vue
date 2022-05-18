@@ -101,8 +101,7 @@ export default {
 
     },
     mounted(){
-        this.getData(),
-        this.statistics()
+        this.getData()
     }
 }
 </script>
