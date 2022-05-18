@@ -1,9 +1,28 @@
 <template>
     <div>
+        <div class="page" v-show="isShow">
+            <el-button type="success" @click="dialogFormVisible = true">修改信息</el-button>
+            <el-dialog title="修改信息" :visible.sync="dialogFormVisible">
+            <el-form :model="form">
+                <el-form-item label="用户名" :label-width="formLabelWidth">
+                    <el-input v-model="form.new_username" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="用户密码" :label-width="formLabelWidth">
+                    <el-input v-model="form.new_password" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="用户邮箱" :label-width="formLabelWidth">
+                    <el-input v-model="form.new_email" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submit_info">提交</el-button>
+            </div>
+            </el-dialog>
+        </div>
         <el-table
         stripe
         border
-        @row-click="set_redirct_data"
         :data="tableData"
         style="width: 100%; font-size: 18px"
         >
@@ -43,7 +62,17 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            tableData: ''
+            tableData: '',
+            dialogFormVisible: false,
+            form: {
+                new_username:'',
+                new_password:'',
+                new_email: '',
+                delivery: false,
+
+            },
+            formLabelWidth: '120px',
+            isShow: true,
 
         }
     },
@@ -55,12 +84,23 @@ export default {
            const id = this.$store.state.token.split('||')[0]
            let api = `api/user/show_self?user_id=${id}`
            axios.get(api).then((result)=>{
-            // console.log(result)
             this.tableData = result.data.data
-           console.log(this.tableData)
-        //    console.log(this.tableData)
+            this.form.new_username = this.tableData[0].user_name
+            this.form.new_email = this.tableData[0].email
         })
        },
+       submit_info(){
+        const id = this.$store.state.token.split('||')[0]
+        let api = 'api/user/modify'
+        const data = `id=${id}&username=${this.form.new_username}&password=${this.form.new_password}&email=${this.form.new_email}`
+        axios.post(api, data).then(res=> {
+            console.log(res)
+            this.getData()
+            this.dialogFormVisible = false
+
+        })
+
+       }
     },
     mounted(){
         this.getData()

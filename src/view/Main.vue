@@ -13,6 +13,12 @@
                 <el-form-item label="余票数量" :label-width="formLabelWidth">
                     <el-input v-model="form.num" autocomplete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="出发时间" :label-width="formLabelWidth">
+                    <el-input v-model="form.begin" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="到达时间" :label-width="formLabelWidth">
+                    <el-input v-model="form.end" autocomplete="off"></el-input>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -57,13 +63,31 @@
             width="200">
         
         </el-table-column>
+
+        <el-table-column
+            stripe
+            align="center"
+            prop="begin"
+            label="出发时间"
+            width="200">
+        
+        </el-table-column>
+
+        <el-table-column
+            stripe
+            align="center"
+            prop="end"
+            label="到达时间"
+            width="200">
+        
+        </el-table-column>
         
         <el-table-column
             stripe
             align="center"
             prop="num"
             label="修改余票"
-            width="200"
+            width="100"
             v-if="isShow">
             
             <template slot-scope="scope">
@@ -75,6 +99,7 @@
             stripe
             align="center"
             prop="goods.goods_num"
+            width="200"
             label="操作">
             <template slot-scope="scope">
                 <el-button size="mini" type='primary' v-if="scope.row.num>0" @click="buy_ticket(scope.row.id)">买票</el-button>
@@ -86,6 +111,8 @@
     
         </el-table-column>
         </el-table>
+        <div class="page" id="mychart" :style="myChartStyle"></div>
+
 
     </div>
 </template>
@@ -93,6 +120,8 @@
 <script>
 import Card from '../components/Card'
 import axios from 'axios'
+import * as echarts from 'echarts';
+
 
 
 export default {
@@ -105,10 +134,14 @@ export default {
                 source: '',
                 target: '',
                 num: '',
+                begin: '',
+                end: '',
                 delivery: false,
             },
             formLabelWidth: '120px',
-            isShow: false
+            isShow: false,
+            chartPie: null,
+            myChartStyle: { float: "left", width: "100%", height: "400px" } //图表样式
         }
     },
     components: {
@@ -153,7 +186,10 @@ export default {
            const source = this.form.source
            const target = this.form.target
            const num = this.form.num
-           const data = `source=${source}&target=${target}&num=${num}`
+           const end = this.form.end
+           const begin = this.form.begin
+
+           const data = `source=${source}&target=${target}&num=${num}&begin=${begin}&end=${end}`
            axios.post(api,data).then(res=>{
                console.log(res)
                this.dialogFormVisible = false
@@ -184,11 +220,47 @@ export default {
                     alert('修改失败')
                 }
             })
-       }
+       },
+       DrawData(){
+            let api = 'api/order/bi'
+            axios.get(api).then(res=>{
+                const yData = [...res.data.data.num]
+                const xData = [...res.data.data.city]
+                const option = {
+                    title: { text: '车票数据分析' ,left:'center'},
+                    xAxis: {
+                        data: xData
+                    },
+                    yAxis: {},
+                    series: [
+                    {
+                        name: '大数据分析',
+                        type: "bar", //形状为柱状图
+                        data: yData,
+                        barWidth: 40,
+                        // barGap: "0%", // 两个柱子之间的距离相对于柱条宽度的百分比;
+                        // barCategoryGap: "40%", // 每侧空余的距离相对于柱条宽度的百分比
+                        itemStyle: {
+                            normal: {
+                                color:function(){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
+                            },
+                    },
+                }
+                ]
+            };
+            const myChart = echarts.init(document.getElementById("mychart"));
+            myChart.setOption(option);
+            //随着屏幕大小调节图表
+            window.addEventListener("resize", () => {
+                myChart.resize();
+            });
+            })
+        },
     },
     mounted(){
         this.getData(),
-        this.cc()
+        this.cc(),
+        this.DrawData()
     },
 }
 </script>
@@ -225,6 +297,10 @@ export default {
 
 .comment {
     text-align: center
+}
+
+.page {
+    background: white;
 }
 
 

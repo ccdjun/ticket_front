@@ -14,7 +14,6 @@
         <el-table
         stripe
         border
-        @row-click="set_redirct_data"
         :data="tableData"
         style="width: 100% ; font-size: 18px"
         >
@@ -44,6 +43,25 @@
             label="目的地"
             >
         </el-table-column>
+
+        <el-table-column
+        stripe
+        align="center"
+        prop="begin"
+        label="出发时间"
+        width="200">
+    
+        </el-table-column>
+
+        <el-table-column
+            stripe
+            align="center"
+            prop="end"
+            label="到达时间"
+            width="200">
+    
+    </el-table-column>
+
         <el-table-column
             stripe
             align="center"
