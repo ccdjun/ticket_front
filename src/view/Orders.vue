@@ -1,65 +1,68 @@
 <template>
     <div>
-        <el-table stripe border :data="tableData" style="width: 100%" height="550" >
-        <el-table-column label="订单信息" align="center">
-
-        <el-table-column
-            stripe
-            align="center"
-            label="序号"
-           >
-           <template slot-scope="scope">
-            <p>{{ scope.$index +1 }}</p>
-        </template>
-        </el-table-column>
+        <el-table
+        stripe
+        border
+        :data="tableData"
+        style="width: 100%; font-size: 18px"
+        >
+        <el-table-column label="个人信息" align="center">
+            <el-table-column
+                stripe
+                align="center"
+                label="序号"
+            >
+                <template slot-scope="scope">
+                    <p>{{ scope.$index +1 }}</p>
+                </template>
+            </el-table-column>
             
-        <el-table-column
-            stripe
-            align="center"
-            prop="username"
-            label="用户姓名"
-            >
-        </el-table-column>
             <el-table-column
-            stripe
-            align="center"
-            prop="source"
-            label="出发地"
-            >
-        </el-table-column>
+                stripe
+                align="center"
+                prop="username"
+                label="用户姓名"
+                >
+            </el-table-column>
+                <el-table-column
+                stripe
+                align="center"
+                prop="source"
+                label="出发地"
+                >
+            </el-table-column>
 
-        </el-table-column>
             <el-table-column
-            stripe
-            align="center"
-            prop="target"
-            label="目的地"
-            >
-        </el-table-column>
+                stripe
+                align="center"
+                prop="target"
+                label="目的地"
+                >
+            </el-table-column>
         
 
-        </el-table-column>
             <el-table-column
-            stripe
-            align="center"
-            prop="order_status"
-            label="是否抢到票"
-            >
-            <template slot-scope="scope">
-                <div v-if="scope.row.order_status==1">
-                    <p>已抢到</p>
-                </div>      
-                <div v-if="scope.row.order_status==0">
-                    <p>未抢到</p>
-                </div>            
-            </template>
-        </el-table-column>
+                stripe
+                align="center"
+                prop="order_status"
+                label="是否抢到票"
+                >
+                <template slot-scope="scope">
+                    <div v-if="scope.row.order_status==1">
+                        <p>已抢到</p>
+                    </div>      
+                    <div v-if="scope.row.order_status==0">
+                        <p>未抢到</p>
+                    </div>            
+                </template>
+            </el-table-column>
 
-        <el-table-column label="操作" align="center">
-            <template slot-scope="scope">
-                <el-button size="mini" type='danger' @click="delete_order(scope.row.id)">删除</el-button>
-            </template>
-        </el-table-column>
+            <el-table-column label="操作" align="center">
+                <template slot-scope="scope">
+                    <el-button size="mini" type='danger' @click="delete_order(scope.row.id)">删除</el-button>
+                </template>
+            </el-table-column>
+            
         </el-table-column>
         </el-table>
     
