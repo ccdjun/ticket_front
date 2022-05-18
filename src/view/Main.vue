@@ -139,8 +139,8 @@ export default {
            const email = this.$store.state.token.split('||')[2]
            let api = 'api/order/lock_order'
            const data = `user_id=${user_id}&ticket_id=${ticket}&email=${email}`
+           alert('已经提交任务请在订单页面查看')
            axios.post(api,data).then(res=>{
-                alert('已经提交任务请在订单页面查看')
                 if (res.data.status==200){
                     this.getData()
                 }else{
